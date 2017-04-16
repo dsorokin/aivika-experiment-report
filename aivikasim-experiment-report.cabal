@@ -17,6 +17,8 @@ cabal-version:   >= 1.6
 build-type:      Simple
 tested-with:     GHC == 8.0.2
 
+extra-source-files:  tests/Test.hs
+
 library
 
     exposed-modules: Simulation.Aivika.Experiment.Report
