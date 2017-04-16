@@ -81,4 +81,4 @@ class ReportRendering r => ReportView v r where
 type ReportGeneratorMap r = ExperimentAgent
                             -> ExperimentEntity
                             -> SourceEntity
-                            -> ReportMonad r (Maybe (ReportGenerator r))
+                            -> ReportMonad r [ReportGenerator r]

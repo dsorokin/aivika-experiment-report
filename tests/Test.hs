@@ -9,7 +9,7 @@ import Simulation.Aivika.Experiment.Report.Base
 
 renderer = defaultWebReportRenderer
 
-generators agent exp src = return Nothing
+generators agent exp src = return []
 
 main =
   do conn  <- connectSqlite3 "test.db"

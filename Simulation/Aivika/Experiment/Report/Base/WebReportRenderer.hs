@@ -94,8 +94,8 @@ instance ReportRendering (WebReportRenderer a) where
     WebReportGenerator { newReportWriter :: ExperimentAgent
                                             -> ExperimentEntity
                                             -> SourceEntity
+                                            -> WebReportRenderer a
                                             -> FilePath
-                                            -> Int
                                             -> WebReportMonad a (WebReportWriter a)
                          -- ^ Create a new web report writer.
                        }
@@ -130,8 +130,8 @@ data WebReportSourceEntity a =
                           -- ^ The source entity.
                           reportSourceIndex :: Int,
                           -- ^ The source index.
-                          reportSourceWriter :: Maybe (WebReportWriter a)
-                          -- ^ The report writer.
+                          reportSourceWriters :: [WebReportWriter a]
+                          -- ^ The report writers.
                         }
 
 -- | Prepare the report.
@@ -168,13 +168,11 @@ prepareExperimentEntities agent generators r path =
                     srcs  <- liftIO $ readSourceEntities agent expId
                     srcs' <-
                       forM (zip [1..] srcs) $ \(i, src) ->
-                      do gen <- generators agent exp src
-                         case gen of
-                           Nothing ->
-                             return $ WebReportSourceEntity src i Nothing
-                           Just g  ->
-                             do wrt <- newReportWriter g agent exp src path' i
-                                return $ WebReportSourceEntity src i (Just wrt)
+                      do gens <- generators agent exp src
+                         wrts <-
+                           forM gens $ \gen ->
+                           newReportWriter gen agent exp src r path'
+                         return $ WebReportSourceEntity src i wrts
                     return $ WebReportExperimentEntity exp path' (Just srcs')
 
 -- | Return the experiment entity writers.
@@ -184,10 +182,7 @@ experimentEntityWriters exp =
     Nothing   -> []
     Just srcs ->
       mconcat $
-      flip map srcs $ \src ->
-      case reportSourceWriter src of
-        Nothing  -> []
-        Just wrt -> [wrt]
+      map reportSourceWriters srcs
 
 -- | Initialise the experiment entities.
 initialiseExperimentEntities :: ([IO ()] -> IO ())
