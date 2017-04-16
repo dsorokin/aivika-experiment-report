@@ -163,7 +163,7 @@ prepareExperimentEntities agent generators r path =
             else do liftIO $ do
                       when (reportVerbose r) $
                         do putStr "Creating directory " 
-                           putStrLn path
+                           putStrLn path'
                       createDirectoryIfMissing True path'
                     srcs  <- liftIO $ readSourceEntities agent expId
                     srcs' <-
