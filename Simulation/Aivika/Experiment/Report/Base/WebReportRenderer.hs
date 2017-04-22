@@ -93,7 +93,6 @@ instance ReportRendering (WebReportRenderer a) where
   data ReportGenerator (WebReportRenderer a) =
     WebReportGenerator { newReportWriter :: ExperimentAgent
                                             -> ExperimentEntity
-                                            -> SourceEntity
                                             -> WebReportRenderer a
                                             -> FilePath
                                             -> WebReportMonad a (WebReportWriter a)
@@ -118,21 +117,13 @@ instance ReportRendering (WebReportRenderer a) where
 data WebReportExperimentEntity a =
   WebReportExperimentEntity { reportExperimentEntity :: ExperimentEntity,
                               -- ^ The experiment entity.
+                              reportExperimentGenerated :: Bool,
+                              -- ^ Whether the experiment report is to be generated.
                               reportExperimentFilePath :: FilePath,
                               -- ^ The experiment file path.
-                              reportSourceEntities :: Maybe [WebReportSourceEntity a]
+                              reportExperimentWriters :: [WebReportWriter a]
                               -- ^ The source entities.
                             }
-
--- | The report source entity.
-data WebReportSourceEntity a =
-  WebReportSourceEntity { reportSourceEntity :: SourceEntity,
-                          -- ^ The source entity.
-                          reportSourceIndex :: Int,
-                          -- ^ The source index.
-                          reportSourceWriters :: [WebReportWriter a]
-                          -- ^ The report writers.
-                        }
 
 -- | Prepare the report.
 prepareReport :: WebReportRenderer a -> WebReportMonad a FilePath
@@ -159,30 +150,17 @@ prepareExperimentEntities agent generators r path =
           f1 <- liftIO $ doesFileExist path'
           f2 <- liftIO $ doesDirectoryExist path'
           if f1 || f2
-            then return $ WebReportExperimentEntity exp path' Nothing
+            then return $ WebReportExperimentEntity exp False path' []
             else do liftIO $ do
                       when (reportVerbose r) $
                         do putStr "Creating directory " 
                            putStrLn path'
                       createDirectoryIfMissing True path'
-                    srcs  <- liftIO $ readSourceEntities agent expId
-                    srcs' <-
-                      forM (zip [1..] srcs) $ \(i, src) ->
-                      do gens <- generators agent exp src
-                         wrts <-
-                           forM gens $ \gen ->
-                           newReportWriter gen agent exp src r path'
-                         return $ WebReportSourceEntity src i wrts
-                    return $ WebReportExperimentEntity exp path' (Just srcs')
-
--- | Return the experiment entity writers.
-experimentEntityWriters :: WebReportExperimentEntity a -> [WebReportWriter a]
-experimentEntityWriters exp =
-  case reportSourceEntities exp of
-    Nothing   -> []
-    Just srcs ->
-      mconcat $
-      map reportSourceWriters srcs
+                    gens <- generators agent exp
+                    wrts <-
+                      forM gens $ \gen ->
+                      newReportWriter gen agent exp r path'
+                    return $ WebReportExperimentEntity exp True path' wrts
 
 -- | Initialise the experiment entities.
 initialiseExperimentEntities :: ([IO ()] -> IO ())
@@ -194,7 +172,7 @@ initialiseExperimentEntities executor exps =
   executor $
   mconcat $
   flip map exps $ \exp ->
-  map reportWriterInitialise $ experimentEntityWriters exp
+  map reportWriterInitialise $ reportExperimentWriters exp
 
 -- | Finalise the experiment entities.
 finaliseExperimentEntities :: ([IO ()] -> IO ())
@@ -206,7 +184,7 @@ finaliseExperimentEntities executor exps =
   executor $
   mconcat $
   flip map exps $ \exp ->
-  map reportWriterFinalise $ experimentEntityWriters exp
+  map reportWriterFinalise $ reportExperimentWriters exp
 
 -- | Write the experiment entities.
 writeExperimentEntities :: ([IO ()] -> IO ())
@@ -220,17 +198,19 @@ writeExperimentEntities executor exps =
   flip map exps $ \exp ->
   let n = experimentEntityRunCount $ reportExperimentEntity exp
   in mconcat $
-     flip map (experimentEntityWriters exp) $ \wrt ->
+     flip map (reportExperimentWriters exp) $ \wrt ->
      flip map [1..n] $ reportWrite wrt
      
 -- | Write the experiment HTML file.
 writeExperimentHtml :: WebReportRenderer a -> WebReportExperimentEntity a -> WebReportMonad a ()
 writeExperimentHtml r exp =
   do let e = reportExperimentEntity exp
-         wrts = experimentEntityWriters exp
+         wrts = reportExperimentWriters exp
+         title = experimentEntityTitle e ++ " - " ++
+                 experimentEntityRealStartTime e
          html :: HtmlWriter ()
          html = 
-           writeHtmlDocumentWithTitle (experimentEntityTitle e) $
+           writeHtmlDocumentWithTitle title $
            do writeHtmlList $
                 forM_ (zip [1..] wrts) $ \(i, wrt) -> 
                 reportWriteTOCHtml wrt i
@@ -241,17 +221,15 @@ writeExperimentHtml r exp =
               forM_ (zip [1..] wrts) $ \(i, wrt) ->
                 reportWriteHtml wrt i
          file = combine (reportExperimentFilePath exp) "index.html"
-     case reportSourceEntities exp of
-       Nothing -> return ()
-       Just _  ->
-         do ((), contents) <- runHtmlWriter html id
-            liftIO $
-              withFile file WriteMode $ \h ->
-              do hSetEncoding h utf8
-                 hPutStr h (contents [])
-                 when (reportVerbose r) $
-                   do putStr "Generated file "
-                      putStrLn file
+     when (reportExperimentGenerated exp) $
+       do ((), contents) <- runHtmlWriter html id
+          liftIO $
+            withFile file WriteMode $ \h ->
+            do hSetEncoding h utf8
+               hPutStr h (contents [])
+               when (reportVerbose r) $
+                 do putStr "Generated file "
+                    putStrLn file
 
 -- | Write the report HTML file.
 writeReportHtml :: WebReportRenderer a -> FilePath -> [WebReportExperimentEntity a] -> WebReportMonad a ()
@@ -267,9 +245,9 @@ writeReportHtml r path exps =
                 do let e = reportExperimentEntity exp
                    writeHtmlListItem $
                      writeHtmlLink (experimentEntityId e ++ "/index.html") $
-                     do writeHtmlText $ experimentEntityRealStartTime e
+                     do writeHtmlText $ experimentEntityTitle e
                         writeHtmlText " - "
-                        writeHtmlText $ experimentEntityTitle e
+                        writeHtmlText $ experimentEntityRealStartTime e
          file = combine path "index.html"
      ((), contents) <- runHtmlWriter html id
      liftIO $

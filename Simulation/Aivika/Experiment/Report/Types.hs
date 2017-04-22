@@ -80,5 +80,4 @@ class ReportRendering r => ReportView v r where
 -- | Defines the generators used for rendering.
 type ReportGeneratorMap r = ExperimentAgent
                             -> ExperimentEntity
-                            -> SourceEntity
                             -> ReportMonad r [ReportGenerator r]

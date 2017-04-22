@@ -31,12 +31,13 @@ import Graphics.Rendering.Chart
 
 import Simulation.Aivika
 import Simulation.Aivika.Experiment
-import Simulation.Aivika.Experiment.Base
+import Simulation.Aivika.Experiment.Base.HtmlWriter
+import Simulation.Aivika.Experiment.Base.ExperimentWriter
 import Simulation.Aivika.Experiment.Chart.Types
 import Simulation.Aivika.Experiment.Chart.Utils (colourisePlotLines, colourisePlotFillBetween)
 import Simulation.Aivika.Experiment.Entity
 import Simulation.Aivika.Experiment.Report.Types
-import Simulation.Aivika.Experiment.Report.Base
+import Simulation.Aivika.Experiment.Report.Base.WebReportRenderer
 
 -- | Defines the 'View' that plots the deviation chart.
 data DeviationChartView =
@@ -57,6 +58,8 @@ data DeviationChartView =
                        -- @
                        --   deviationChartFileName = UniqueFilePath \"$TITLE\"
                        -- @
+                       deviationChartSourceKey    :: String,
+                       -- ^ The source key.
                        deviationChartLeftYSeries  :: [String] -> [String], 
                        -- ^ It defines the series to be plotted basing on the left Y axis.
                        deviationChartRightYSeries :: [String] -> [String], 
@@ -106,6 +109,7 @@ defaultDeviationChartView =
                        deviationChartWidth       = 640,
                        deviationChartHeight      = 480,
                        deviationChartFileName    = UniqueFilePath "DeviationChart",
+                       deviationChartSourceKey   = "Must supply with the deviationChartSourceKey value.",
                        deviationChartLeftYSeries  = const [], 
                        deviationChartRightYSeries = id, 
                        deviationChartPlotTitle   = "$TITLE",
@@ -117,13 +121,13 @@ defaultDeviationChartView =
 instance ChartRendering r => ReportView DeviationChartView (WebReportRenderer r) where
   
   reportView view = 
-    let newWriter agent exp src renderer path =
+    let newWriter agent exp renderer path =
           do file <- resolveFilePath path $
                      mapFilePath (flip replaceExtension $ renderableChartExtension $ reportParameter renderer) $
                      expandFilePath (deviationChartFileName view) $
                      M.fromList [("$TITLE", deviationChartTitle view)]
              return WebReportWriter { reportWriterInitialise = return (),
-                                      reportWriterFinalise   = finaliseDeviationChart view agent exp src renderer file,
+                                      reportWriterFinalise   = finaliseDeviationChart view agent exp renderer file,
                                       reportWrite            = \runIndex -> return (),
                                       reportWriteTOCHtml     = deviationChartTOCHtml view,
                                       reportWriteHtml        = deviationChartHtml view path file
@@ -135,11 +139,10 @@ finaliseDeviationChart :: ChartRendering r
                           => DeviationChartView
                           -> ExperimentAgent
                           -> ExperimentEntity
-                          -> SourceEntity
                           -> WebReportRenderer r
                           -> FilePath
                           -> IO ()
-finaliseDeviationChart view agent exp src renderer file =
+finaliseDeviationChart view agent exp renderer file =
   do let title = deviationChartTitle view
          plotTitle = deviationChartPlotTitle view
          plotTitle' = 
@@ -151,6 +154,7 @@ finaliseDeviationChart view agent exp src renderer file =
          plotFillBetween = deviationChartPlotFillBetween view
          plotBottomAxis = deviationChartBottomAxis view
          plotLayout = deviationChartLayout view
+     src <- requireSourceEntityByKey agent (experimentEntityId exp) (deviationChartSourceKey view)
      es <- readDeviationEntities agent (experimentEntityId exp) (sourceEntityId src)
      ps <-
        liftIO $

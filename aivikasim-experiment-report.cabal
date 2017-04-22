@@ -17,19 +17,25 @@ cabal-version:   >= 1.6
 build-type:      Simple
 tested-with:     GHC == 8.0.2
 
-extra-source-files:  tests/Test.hs
+extra-source-files:  tests/MachRep3.hs
 
 library
 
     exposed-modules: Simulation.Aivika.Experiment.Report
                      Simulation.Aivika.Experiment.Report.Types
                      Simulation.Aivika.Experiment.Report.Base
+                     Simulation.Aivika.Experiment.Report.Base.ExperimentSpecsView
+                     Simulation.Aivika.Experiment.Report.Base.ExperimentSpecsWriter
+                     Simulation.Aivika.Experiment.Report.Base.FinalStatsView
+                     Simulation.Aivika.Experiment.Report.Base.TableView
                      Simulation.Aivika.Experiment.Report.Base.WebReportRenderer
                      Simulation.Aivika.Experiment.Report.Chart
                      Simulation.Aivika.Experiment.Report.Chart.DeviationChartView
+                     Simulation.Aivika.Experiment.Report.Chart.FinalHistogramView
                      
     build-depends:   base >= 4.2 && < 6,
                      mtl >= 1.1.0.2,
+                     array >= 0.3.0.0,
                      containers >= 0.4.0.0,
                      directory >= 1.1.0.2,
                      filepath >= 1.3.0.0,
