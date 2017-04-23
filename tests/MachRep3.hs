@@ -40,7 +40,12 @@ generators agent exp =
    reportView $ defaultTimeSeriesView {
      timeSeriesSourceKey = "time series 1",
      timeSeriesLeftYSeries = filter (== "t"),
-     timeSeriesRightYSeries = filter (== "x") }]
+     timeSeriesRightYSeries = filter (== "x") },
+   reportView $ defaultXYChartView {
+     xyChartSourceKey = "time series 1",
+     xyChartXSeries = filter (== "t"),
+     xyChartLeftYSeries = filter (== "t"),
+     xyChartRightYSeries = filter (== "x") }]
 
 main =
   do conn  <- connectSqlite3 "test.db"
