@@ -17,7 +17,8 @@ cabal-version:   >= 1.6
 build-type:      Simple
 tested-with:     GHC == 8.0.2
 
-extra-source-files:  tests/MachRep3.hs
+extra-source-files:  tests/MachRep2.hs
+                     tests/MachRep3.hs
 
 library
 
@@ -30,6 +31,7 @@ library
                      Simulation.Aivika.Experiment.Report.Base.FinalTableView
                      Simulation.Aivika.Experiment.Report.Base.LastValueView
                      Simulation.Aivika.Experiment.Report.Base.TableView
+                     Simulation.Aivika.Experiment.Report.Base.TimingStatsView
                      Simulation.Aivika.Experiment.Report.Base.WebReportRenderer
                      Simulation.Aivika.Experiment.Report.Chart
                      Simulation.Aivika.Experiment.Report.Chart.DeviationChartView
