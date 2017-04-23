@@ -62,7 +62,7 @@ data TimingStatsView =
 -- | This is the default view.
 defaultTimingStatsView :: TimingStatsView
 defaultTimingStatsView =  
-  TimingStatsView { timingStatsTitle       = "Timing Statistics",
+  TimingStatsView { timingStatsTitle       = "Statistics for Time-Persistent Variables",
                     timingStatsRunTitle    = "$TITLE / Run $RUN_INDEX of $RUN_COUNT",
                     timingStatsDescription = "The statistical data are gathered in the time points.",
                     timingStatsWriter      = defaultTimingStatsWriter,

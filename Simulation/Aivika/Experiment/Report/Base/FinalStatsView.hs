@@ -50,7 +50,7 @@ data FinalStatsView =
 -- | The default statistics view.  
 defaultFinalStatsView :: FinalStatsView
 defaultFinalStatsView = 
-  FinalStatsView { finalStatsTitle       = "Final Statistics",
+  FinalStatsView { finalStatsTitle       = "Final Statistics Based on Observations",
                    finalStatsDescription = "Statistics is gathered in final time points for all runs.",
                    finalStatsWriter      = defaultSamplingStatsWriter,
                    finalStatsSourceKey   = "Must supply with the finalStatsSourceKey value",
