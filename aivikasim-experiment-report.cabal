@@ -28,6 +28,7 @@ library
                      Simulation.Aivika.Experiment.Report.Base.ExperimentSpecsWriter
                      Simulation.Aivika.Experiment.Report.Base.FinalStatsView
                      Simulation.Aivika.Experiment.Report.Base.FinalTableView
+                     Simulation.Aivika.Experiment.Report.Base.LastValueView
                      Simulation.Aivika.Experiment.Report.Base.TableView
                      Simulation.Aivika.Experiment.Report.Base.WebReportRenderer
                      Simulation.Aivika.Experiment.Report.Chart
