@@ -36,6 +36,7 @@ library
                      Simulation.Aivika.Experiment.Report.Chart
                      Simulation.Aivika.Experiment.Report.Chart.DeviationChartView
                      Simulation.Aivika.Experiment.Report.Chart.FinalHistogramView
+                     Simulation.Aivika.Experiment.Report.Chart.FinalXYChartView
                      Simulation.Aivika.Experiment.Report.Chart.TimeSeriesView
                      Simulation.Aivika.Experiment.Report.Chart.XYChartView
                      
