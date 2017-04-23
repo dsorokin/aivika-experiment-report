@@ -15,9 +15,11 @@ module Simulation.Aivika.Experiment.Report.Chart
         module Simulation.Aivika.Experiment.Chart.Types,
         module Simulation.Aivika.Experiment.Report.Base,
         module Simulation.Aivika.Experiment.Report.Chart.DeviationChartView,
-        module Simulation.Aivika.Experiment.Report.Chart.FinalHistogramView) where
+        module Simulation.Aivika.Experiment.Report.Chart.FinalHistogramView,
+        module Simulation.Aivika.Experiment.Report.Chart.TimeSeriesView) where
 
 import Simulation.Aivika.Experiment.Chart.Types
 import Simulation.Aivika.Experiment.Report.Base
 import Simulation.Aivika.Experiment.Report.Chart.DeviationChartView
 import Simulation.Aivika.Experiment.Report.Chart.FinalHistogramView
+import Simulation.Aivika.Experiment.Report.Chart.TimeSeriesView

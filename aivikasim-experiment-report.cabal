@@ -36,6 +36,7 @@ library
                      Simulation.Aivika.Experiment.Report.Chart
                      Simulation.Aivika.Experiment.Report.Chart.DeviationChartView
                      Simulation.Aivika.Experiment.Report.Chart.FinalHistogramView
+                     Simulation.Aivika.Experiment.Report.Chart.TimeSeriesView
                      
     build-depends:   base >= 4.2 && < 6,
                      mtl >= 1.1.0.2,

@@ -36,7 +36,11 @@ generators agent exp =
      finalTableSourceKey = "last value 1" },
    reportView $ defaultLastValueView {
      lastValueSourceKey = "last value 1",
-     lastValueSeries = filter (== "x") }]
+     lastValueSeries = filter (== "x") },
+   reportView $ defaultTimeSeriesView {
+     timeSeriesSourceKey = "time series 1",
+     timeSeriesLeftYSeries = filter (== "t"),
+     timeSeriesRightYSeries = filter (== "x") }]
 
 main =
   do conn  <- connectSqlite3 "test.db"
