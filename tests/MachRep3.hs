@@ -31,7 +31,9 @@ generators agent exp =
      tableSeries = filter (== "x") },
    reportView $ defaultFinalHistogramView {
      finalHistogramSourceKey = "multiple last value list 1",
-     finalHistogramSeries = filter (== "x") }]
+     finalHistogramSeries = filter (== "x") },
+   reportView $ defaultFinalTableView {
+     finalTableSourceKey = "last value 1" }]
 
 main =
   do conn  <- connectSqlite3 "test.db"
