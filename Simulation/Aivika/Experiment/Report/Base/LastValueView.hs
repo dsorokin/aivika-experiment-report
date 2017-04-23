@@ -62,7 +62,7 @@ data LastValueView =
 -- | This is the default view.
 defaultLastValueView :: LastValueView
 defaultLastValueView =  
-  LastValueView { lastValueTitle       = "The Last Values",
+  LastValueView { lastValueTitle       = "Last Values",
                   lastValueRunTitle    = "$TITLE / Run $RUN_INDEX of $RUN_COUNT",
                   lastValueDescription = "It shows the values in the final time point(s).",
                   lastValueFormatter   = id,
