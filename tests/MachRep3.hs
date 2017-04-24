@@ -50,7 +50,10 @@ generators agent exp =
      finalXYChartSourceKey = "last value 1",
      finalXYChartXSeries = filter (== "n"),
      finalXYChartLeftYSeries = filter (== "t"),
-     finalXYChartRightYSeries = filter (== "x") }]
+     finalXYChartRightYSeries = filter (== "x") },
+   reportView $ defaultHistogramView {
+     histogramSourceKey = "time series 1",
+     histogramSeries = filter (== "x") }]
 
 main =
   do conn  <- connectSqlite3 "test.db"
