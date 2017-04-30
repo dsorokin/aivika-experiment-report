@@ -26,3 +26,5 @@ main =
   do conn  <- connectSqlite3 "test.db"
      agent <- newExperimentAgent conn
      runReportParallel agent generators renderer
+     disconnect conn
+     
