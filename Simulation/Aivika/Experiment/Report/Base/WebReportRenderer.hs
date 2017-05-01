@@ -147,20 +147,22 @@ prepareExperimentEntities agent generators r path =
      forM exps $ \exp ->
        do let expId = experimentEntityId exp
               path' = path </> expId
-          f1 <- liftIO $ doesFileExist path'
-          f2 <- liftIO $ doesDirectoryExist path'
-          if f1 || f2
+          if not (experimentEntityCompleted exp)
             then return $ WebReportExperimentEntity exp False path' []
-            else do liftIO $ do
-                      when (reportVerbose r) $
-                        do putStr "Creating directory " 
-                           putStrLn path'
-                      createDirectoryIfMissing True path'
-                    gens <- generators agent exp
-                    wrts <-
-                      forM gens $ \gen ->
-                      newReportWriter gen agent exp r path'
-                    return $ WebReportExperimentEntity exp True path' wrts
+            else do f1 <- liftIO $ doesFileExist path'
+                    f2 <- liftIO $ doesDirectoryExist path'
+                    if f1 || f2
+                      then return $ WebReportExperimentEntity exp False path' []
+                      else do liftIO $ do
+                                when (reportVerbose r) $
+                                  do putStr "Creating directory " 
+                                     putStrLn path'
+                                createDirectoryIfMissing True path'
+                              gens <- generators agent exp
+                              wrts <-
+                                forM gens $ \gen ->
+                                newReportWriter gen agent exp r path'
+                              return $ WebReportExperimentEntity exp True path' wrts
 
 -- | Initialise the experiment entities.
 initialiseExperimentEntities :: ([IO ()] -> IO ())
@@ -171,7 +173,8 @@ initialiseExperimentEntities :: ([IO ()] -> IO ())
 initialiseExperimentEntities executor exps =
   executor $
   mconcat $
-  flip map exps $ \exp ->
+  let exps' = filter (experimentEntityCompleted . reportExperimentEntity) exps
+  in flip map exps' $ \exp ->
   map reportWriterInitialise $ reportExperimentWriters exp
 
 -- | Finalise the experiment entities.
@@ -183,7 +186,8 @@ finaliseExperimentEntities :: ([IO ()] -> IO ())
 finaliseExperimentEntities executor exps =
   executor $
   mconcat $
-  flip map exps $ \exp ->
+  let exps' = filter (experimentEntityCompleted . reportExperimentEntity) exps
+  in flip map exps' $ \exp ->
   map reportWriterFinalise $ reportExperimentWriters exp
 
 -- | Write the experiment entities.
@@ -195,7 +199,8 @@ writeExperimentEntities :: ([IO ()] -> IO ())
 writeExperimentEntities executor exps =
   executor $
   mconcat $
-  flip map exps $ \exp ->
+  let exps' = filter (experimentEntityCompleted . reportExperimentEntity) exps
+  in flip map exps' $ \exp ->
   let n = experimentEntityRunCount $ reportExperimentEntity exp
   in mconcat $
      flip map (reportExperimentWriters exp) $ \wrt ->
@@ -243,11 +248,22 @@ writeReportHtml r path exps =
               writeHtmlList $
                 forM_ (zip [1..] exps) $ \(i, exp) ->
                 do let e = reportExperimentEntity exp
-                   writeHtmlListItem $
-                     writeHtmlLink (experimentEntityId e ++ "/index.html") $
-                     do writeHtmlText $ experimentEntityTitle e
-                        writeHtmlText " - "
-                        writeHtmlText $ experimentEntityRealStartTime e
+                   if experimentEntityCompleted e
+                     then writeHtmlListItem $
+                          writeHtmlLink (experimentEntityId e ++ "/index.html") $
+                          do writeHtmlText $ experimentEntityTitle e
+                             writeHtmlText " - "
+                             writeHtmlText $ experimentEntityRealStartTime e
+                     else writeHtmlListItem $
+                          do writeHtmlText $ experimentEntityTitle e
+                             writeHtmlText " - "
+                             writeHtmlText $ experimentEntityRealStartTime e
+                             case experimentEntityErrorMessage e of
+                               Nothing  -> return ()
+                               Just msg ->
+                                 do writeHtmlText " ("
+                                    writeHtmlText msg
+                                    writeHtmlText ")"
          file = combine path "index.html"
      ((), contents) <- runHtmlWriter html id
      liftIO $
