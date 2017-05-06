@@ -17,10 +17,11 @@ cabal-version:   >= 1.6
 build-type:      Simple
 tested-with:     GHC == 8.0.2
 
-extra-source-files:  tests/MachRep2Sqlite3.hs
-                     tests/MachRep3MySQL.hs
-                     tests/MachRep3PostgreSQL.hs
-                     tests/MachRep3Sqlite3.hs
+extra-source-files:  tests/MachRep2Sqlite3UsingCairo.hs
+                     tests/MachRep3MySQLUsingCairo.hs
+                     tests/MachRep3PostgreSQLUsingCairo.hs
+                     tests/MachRep3Sqlite3UsingCairo.hs
+                     tests/MachRep3Sqlite3UsingDiagrams.hs
 
 library
 
