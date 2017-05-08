@@ -22,6 +22,7 @@ import Control.Monad.Trans
 
 import qualified Data.Map as M
 import Data.List
+import Data.Monoid
 import Data.Maybe
 import Data.IORef
 

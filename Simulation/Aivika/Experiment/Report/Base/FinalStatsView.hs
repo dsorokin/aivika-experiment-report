@@ -22,6 +22,7 @@ import Control.Monad.Trans
 import Control.Concurrent.MVar
 
 import Data.List
+import Data.Monoid
 
 import Simulation.Aivika
 import Simulation.Aivika.Experiment.Base.HtmlWriter

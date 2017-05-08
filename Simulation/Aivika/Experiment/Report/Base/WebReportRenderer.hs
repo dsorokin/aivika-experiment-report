@@ -23,6 +23,8 @@ module Simulation.Aivika.Experiment.Report.Base.WebReportRenderer
 import Control.Monad
 import Control.Monad.Trans
 
+import Data.Monoid
+
 import System.IO
 import System.Directory
 import System.FilePath

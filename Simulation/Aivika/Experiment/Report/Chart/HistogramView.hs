@@ -26,6 +26,7 @@ import Data.List
 import qualified Data.Map as M
 import qualified Data.Array as A
 import Data.Either
+import Data.Monoid
 import Data.Default.Class
 
 import System.FilePath

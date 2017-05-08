@@ -23,6 +23,7 @@ import Control.Monad.Trans
 import qualified Data.Map as M
 import Data.List
 import Data.Maybe
+import Data.Monoid
 import Data.IORef
 
 import Simulation.Aivika

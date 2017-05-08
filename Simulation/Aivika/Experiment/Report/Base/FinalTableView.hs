@@ -24,6 +24,7 @@ import Control.Monad.Trans
 import qualified Data.Map as M
 import qualified Data.Array as A
 import Data.List
+import Data.Monoid
 
 import System.IO
 import System.FilePath

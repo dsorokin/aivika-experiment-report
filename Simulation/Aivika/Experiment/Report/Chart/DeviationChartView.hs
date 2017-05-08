@@ -23,6 +23,7 @@ import Control.Lens
 import Data.List
 import qualified Data.Map as M
 import Data.Either
+import Data.Monoid
 import Data.Default.Class
 
 import System.FilePath
