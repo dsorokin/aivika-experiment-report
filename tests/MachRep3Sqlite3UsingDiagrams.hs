@@ -13,8 +13,8 @@ import Simulation.Aivika.Experiment.Chart.Backend.Diagrams
 
 import Graphics.Rendering.Chart.Backend.Diagrams
 
-renderer =
-  defaultWebReportRenderer { reportParameter = DiagramsRenderer SVG loadCommonFonts }
+renderer fonts =
+  defaultWebReportRenderer { reportParameter = DiagramsRenderer SVG (return fonts) }
 
 generators agent exp =
   return
@@ -56,8 +56,9 @@ generators agent exp =
      histogramSeries = filter (== "x") }]
 
 main =
-  do conn  <- connectSqlite3 "test.db"
+  do fonts <- loadCommonFonts
+     conn  <- connectSqlite3 "test.db"
      agent <- newExperimentAgent conn
-     runReportParallel agent generators renderer
+     runReportParallel agent generators (renderer fonts)
      disconnect conn
      
