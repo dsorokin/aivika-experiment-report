@@ -1,5 +1,5 @@
 name:            aivikasim-experiment-report
-version:         0.1
+version:         0.2
 synopsis:        Simulation experiment reports for AivikaSim
 description:
     This package allows generating reports by simulation experiments [1].
@@ -57,7 +57,7 @@ library
                      aivikasim >= 1.0,
                      aivikasim-experiment >= 0.1,
                      aivikasim-experiment-chart >= 0.1,
-                     aivikasim-experiment-entity >= 0.1
+                     aivikasim-experiment-entity >= 0.2
 
     extensions:      MultiParamTypeClasses,
                      FlexibleContexts,

@@ -148,7 +148,7 @@ prepareExperimentEntities agent generators r path =
   do exps <- liftIO $ readExperimentEntities agent
      forM exps $ \exp ->
        do let expId = experimentEntityId exp
-              path' = path </> expId
+              path' = path </> show expId
           if not (experimentEntityCompleted exp)
             then return $ WebReportExperimentEntity exp False path' []
             else do f1 <- liftIO $ doesFileExist path'
@@ -252,7 +252,7 @@ writeReportHtml r path exps =
                 do let e = reportExperimentEntity exp
                    if experimentEntityCompleted e
                      then writeHtmlListItem $
-                          writeHtmlLink (experimentEntityId e ++ "/index.html") $
+                          writeHtmlLink (show (experimentEntityId e) ++ "/index.html") $
                           do writeHtmlText $ experimentEntityTitle e
                              writeHtmlText " - "
                              writeHtmlText $ experimentEntityRealStartTime e
