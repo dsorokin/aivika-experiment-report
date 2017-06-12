@@ -1,10 +1,10 @@
-name:            aivikasim-experiment-report
-version:         0.2
-synopsis:        Simulation experiment reports for AivikaSim
+name:            aivika-experiment-report
+version:         0.3
+synopsis:        Simulation experiment reports for Aivika
 description:
     This package allows generating reports by simulation experiments [1].
     .
-    \[1] <http://www.aivikasoft.com/aivikasim/aivikasim-experiment>
+    \[1] <http://hackage.haskell.org/package/aivika-experiment>
     .
 category:        Simulation
 license:         AllRightsReserved
@@ -12,7 +12,7 @@ license-file:    LICENSE
 copyright:       (c) 2017. David Sorokin <david.sorokin@gmail.com>
 author:          David Sorokin
 maintainer:      David Sorokin <david.sorokin@gmail.com>
-homepage:        http://www.aivikasoft.com/en/products/aivikasim.html
+homepage:        http://www.aivikasoft.com
 cabal-version:   >= 1.6
 build-type:      Simple
 tested-with:     GHC == 8.0.2
@@ -54,10 +54,10 @@ library
                      Chart >= 1.5,
                      lens >= 3.9,
                      data-default-class >= 0.0.1,
-                     aivikasim >= 1.0,
-                     aivikasim-experiment >= 0.1,
-                     aivikasim-experiment-chart >= 0.1,
-                     aivikasim-experiment-entity >= 0.2
+                     aivika >= 5.1,
+                     aivika-experiment >= 5.0,
+                     aivika-experiment-chart >= 5.0,
+                     aivika-experiment-entity >= 0.4
 
     extensions:      MultiParamTypeClasses,
                      FlexibleContexts,
@@ -68,4 +68,4 @@ library
 source-repository head
 
     type:     git
-    location: https://github.com/dsorokin/aivikasim-experiment-report
+    location: https://github.com/dsorokin/aivika-experiment-report
