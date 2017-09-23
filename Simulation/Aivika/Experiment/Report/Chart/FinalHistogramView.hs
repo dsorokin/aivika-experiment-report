@@ -173,7 +173,9 @@ finaliseFinalHistogram view agent exp renderer file =
                          layout_right_axis_visibility .~ v $
                          l
            else id
-         chart = layout . updateAxes $
+         chart = layout .
+                 renderingLayout (reportParameter renderer) .
+                 updateAxes $
                  layout_title .~ plotTitle' $
                  layout_plots .~ [p] $
                  def

@@ -202,7 +202,9 @@ writeHistogram view agent exp renderer file runIndex =
                          layout_right_axis_visibility .~ v $
                          l
            else id
-         chart = layout . updateAxes $
+         chart = layout .
+                 renderingLayout (reportParameter renderer) .
+                 updateAxes $
                  layout_title .~ runPlotTitle' $
                  layout_plots .~ [p] $
                  def

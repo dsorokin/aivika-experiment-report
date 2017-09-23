@@ -1,5 +1,5 @@
 name:            aivika-experiment-report
-version:         0.3
+version:         0.3.1
 synopsis:        Simulation experiment reports for Aivika
 description:
     This package allows generating reports by simulation experiments [1].
@@ -56,7 +56,7 @@ library
                      data-default-class >= 0.0.1,
                      aivika >= 5.1,
                      aivika-experiment >= 5.0,
-                     aivika-experiment-chart >= 5.0,
+                     aivika-experiment-chart >= 5.1,
                      aivika-experiment-entity >= 0.4
 
     extensions:      MultiParamTypeClasses,

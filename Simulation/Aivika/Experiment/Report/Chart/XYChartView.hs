@@ -238,7 +238,9 @@ writeXYChart view agent exp renderer file runIndex =
            if null ps2
            then layoutlr_right_axis_visibility .~ AxisVisibility False False False
            else id
-         chart = plotLayout . updateLeftAxis . updateRightAxis $
+         chart = plotLayout .
+                 renderingLayoutLR (reportParameter renderer) .
+                 updateLeftAxis . updateRightAxis $
                  layoutlr_x_axis .~ axis $
                  layoutlr_title .~ runPlotTitle' $
                  layoutlr_plots .~ ps $
