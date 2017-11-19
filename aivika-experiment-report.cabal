@@ -54,10 +54,10 @@ library
                      Chart >= 1.5,
                      lens >= 3.9,
                      data-default-class >= 0.0.1,
-                     aivika >= 5.3,
-                     aivika-experiment >= 5.1,
+                     aivika >= 5.5,
+                     aivika-experiment >= 5.2,
                      aivika-experiment-chart >= 5.1,
-                     aivika-experiment-entity >= 0.4
+                     aivika-experiment-entity >= 0.5
 
     extensions:      MultiParamTypeClasses,
                      FlexibleContexts,
