@@ -1,5 +1,5 @@
 name:            aivika-experiment-report
-version:         0.4
+version:         0.5
 synopsis:        Simulation experiment reports for Aivika
 description:
     This package allows generating reports by simulation experiments [1].
